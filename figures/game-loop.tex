@@ -1,0 +1,37 @@
+\begin{tikzpicture}[flowchart, node distance=6mm and 14mm]
+  \node[terminal] (start) {Start};
+  \node[subprocess=56mm, below=of start] (look0) {Look at the board\\(Figure~\ref{fig:vision})};
+  \node[process=56mm, below=8mm of look0] (turn) {Opponent moves a piece by hand\\and presses a key};
+  \node[decision, below=10mm of turn] (key) {Key?};
+  \node[subprocess=56mm, below=of key] (look) {Look at the board\\(Figure~\ref{fig:vision})};
+  \node[decision, below=of look] (legal) {Does a legal\\move match?};
+  \node[process=56mm, below=of legal] (playopp) {Play the move on the game board};
+  \node[decision, below=of playopp] (over1) {Game over?};
+  \node[process=56mm, below=8mm of over1] (engine) {Instinct chooses a move over \acs{UCI};\\the position after it is the target};
+  \node[subprocess=56mm, below=of engine] (transfer) {Carry out transfers until the\\board matches (Figure~\ref{fig:transfer-loop})};
+  \node[decision, below=of transfer] (over2) {Game over?};
+
+  \node[process=28mm, left=of legal] (illegal) {Show\\\enquote{Illegal move}};
+  \node[subprocess=30mm, right=of key] (reset) {Reset the board to\\the start position\\(Figure~\ref{fig:transfer-loop})};
+  \node[process=30mm] at (over1 -| reset) (result) {Show the result;\\wait for \texttt{r}};
+
+  \draw[->] (start) -- (look0);
+  \draw[->] (look0) -- (turn);
+  \draw[->] (turn) -- (key);
+  \draw[->] (key) -- node[branch] {space} (look);
+  \draw[->] (key) -- node[branch] {\texttt{r}} (reset);
+  \draw[->] (reset) |- (turn);
+  \draw[->] (look) -- (legal);
+  \draw[->] (legal) -- node[branch] {yes} (playopp);
+  \draw[->] (legal) -- node[branch, swap] {no} (illegal);
+  \draw[->] (illegal) |- (turn.west);
+  \draw[->] (playopp) -- (over1);
+  \draw[->] (over1) -- node[branch] {no} (engine);
+  \draw[->] (over1) -- node[branch] {yes} (result);
+  \draw[->] (engine) -- (transfer);
+  \draw[->] (transfer) -- (over2);
+  \draw[->] (over2) -| node[branch, pos=0.1] {yes} (result);
+  \draw[->] (result) -- (reset);
+  \coordinate (bus) at ($(illegal.west) + (-5mm,0)$);
+  \draw[->] (over2.west) -- node[branch, swap, pos=0.1] {no} (over2.west -| bus) |- (turn.west);
+\end{tikzpicture}

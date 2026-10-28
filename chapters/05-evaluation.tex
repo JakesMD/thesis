@@ -1,0 +1,42 @@
+\chapter{Evaluation}
+\label{chap:evaluation}
+
+\section{Training loss}
+\label{sec:training-loss}
+
+A network that spreads its probability evenly over all 128 bins has a loss
+of $\ln 128 \approx 4.85$, which is a reference point for the values below.
+The two training runs reached almost the same best validation loss: 2.4857
+for v1 and 2.4855 for v2. Both
+losses fell from about 4.0 after the first 1,000 steps, and in both runs the
+validation loss still varied by around 0.02 from one evaluation to the next
+in the final 10,000 steps. A difference of 0.0002 is far inside that
+variation, so by validation loss the two models are equal.
+In games, v2 plays stronger than v1. Validation loss is
+therefore a weak guide to playing strength, and Instinct's strength is
+measured in games instead.
+
+Figure~\ref{fig:loss} shows the loss of both runs. Both have short spikes.
+The validation loss of v1 jumps from about 2.85 to 3.96 at step 64,000, and
+that of v2 rises to 3.44, 3.32 and 3.11 at steps 71,000, 187,000 and
+219,000. At each spike the training loss jumps as well, so the model itself
+got worse for a moment, and by the next evaluation, 1,000 steps later, the
+loss is back on its curve. The cause was not investigated. Instinct is
+trained without learning-rate warm-up, without learning-rate decay and
+without gradient clipping; whether any of these would have prevented the
+spikes was not tested. Keeping the checkpoint with the lowest validation
+loss ensures that a run cannot end on a spike.
+
+\begin{figure}[htbp]
+  \centering
+  \input{figures/loss.tex}
+  \caption{Training and validation loss of v1 and v2 over the single pass. The
+    training loss is that of the batch at each logged step; the validation loss
+    is computed on 200,000 samples every 1,000 steps.}
+  \label{fig:loss}
+\end{figure}
+
+\section{Vision}
+\label{sec:vision}
+
+The classifier named every validation crop correctly from the first epoch on.

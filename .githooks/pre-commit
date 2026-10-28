@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if ! git diff --cached --name-only --diff-filter=ACMRD \
+    | grep -Eq '\.(tex|sty|cls|bib)$|^figures/|^latexmkrc$'; then
+    exit 0
+fi
+
+echo "pre-commit: building main.pdf"
+if ! latexmk -interaction=nonstopmode -halt-on-error main.tex >/dev/null; then
+    echo "pre-commit: build failed, see main.log" >&2
+    exit 1
+fi
+
+git add main.pdf

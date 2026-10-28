@@ -1,0 +1,21 @@
+# Build specific
+build/
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.synctex.gz
+*.dvi
+*.ps
+*.toc
+
+# OS specific
+.DS_Store
+
+# Cited papers
+papers/

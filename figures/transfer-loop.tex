@@ -1,0 +1,25 @@
+\begin{tikzpicture}[flowchart, node distance=6mm and 10mm]
+  \node[data] (in) {Target position};
+  \node[subprocess=44mm, below=of in] (look) {Look at the board\\(Figure~\ref{fig:vision})};
+  \node[decision, below=of look] (fill) {Empty square\\that can be filled?};
+  \node[decision, below=of fill] (wrong) {Square held by\\a wrong piece?};
+  \node[decision, below=of wrong] (surplus) {Surplus piece\\left?};
+  \node[data, below=of surplus] (out) {No transfer left:\\the board matches the target};
+
+  \node[process=44mm, right=of fill] (place) {Fill it with a matching piece:\\from a square before the\\parking area, nearest first};
+  \node[process=44mm, minimum height=13mm] at (wrong -| place) (park) {Park that piece};
+  \node[process=44mm] at (out -| place) (move) {Carry out the transfer};
+
+  \draw[->] (in) -- (look);
+  \draw[->] (look) -- (fill);
+  \draw[->] (fill) -- node[branch] {yes} (place);
+  \draw[->] (fill) -- node[branch] {no} (wrong);
+  \draw[->] (wrong) -- node[branch] {yes} (park);
+  \draw[->] (wrong) -- node[branch] {no} (surplus);
+  \draw[->] (surplus) -| node[branch, pos=0.1] {yes} (park.south);
+  \draw[->] (surplus) -- node[branch] {no} (out);
+  \draw (place.east) -- ++(5mm,0) coordinate (bus);
+  \draw (park.east) -- (park.east -| bus);
+  \draw[->] (bus) |- (move.east);
+  \draw[->] (move.south) -- ++(0,-5mm) -| ($(move.east -| bus) + (5mm,0)$) |- (look.east);
+\end{tikzpicture}

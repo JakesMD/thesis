@@ -1,0 +1,51 @@
+\documentclass[
+12pt,
+a4paper,
+oneside,
+headsepline,
+bibliography=totoc,
+listof=totoc
+]{scrreprt}
+
+\newcommand{\thesistype}{Bachelor's Thesis}
+\newcommand{\thesistitle}{A Chess-Playing Cobot Driven by a Searchless Transformer}
+\newcommand{\thesisauthor}{Vorname Nachname}
+\newcommand{\studycourse}{Studiengang}
+\newcommand{\faculty}{Faculty of Electrical Engineering and Information Technology}
+\newcommand{\university}{Technische Hochschule Ingolstadt}
+\newcommand{\firstexaminer}{Prof. Dr.-Ing. Ali Kanso}
+\newcommand{\secondexaminer}{Prof. Passig}
+\newcommand{\issuedate}{01.01.2026}
+\newcommand{\submissiondate}{17.12.2026}
+\newcommand{\place}{Ingolstadt}
+
+
+\usepackage[mainlang=english]{thi-thesis}
+
+
+\begin{document}
+
+	% \input{frontmatter/cover.tex}
+	\pagenumbering{Roman}
+
+	% \input{frontmatter/declaration.tex}
+
+	\tableofcontents
+	\listoffigures
+	\listoftables
+	\input{frontmatter/abbreviations.tex}
+	\clearpage
+
+	\pagenumbering{arabic}
+
+	\input{chapters/01-introduction.tex}
+	\input{chapters/02-fundamentals.tex}
+	\input{chapters/03-requirements-concept.tex}
+	\input{chapters/04-implementation.tex}
+	\input{chapters/05-evaluation.tex}
+	\input{chapters/06-conclusion.tex}
+
+	\clearpage
+	\bibliography{references}
+
+\end{document}

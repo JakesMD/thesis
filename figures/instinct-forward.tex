@@ -1,0 +1,19 @@
+\begin{tikzpicture}[flowchart, node distance=10mm and 11mm,
+    dims/.style={above, gray, font=\scriptsize, inner sep=1.5pt}]
+  \node[data] (in) {Position and\\candidate move};
+  \node[process=29mm, right=of in] (tok) {Tokenise:\\71 state + 1 move};
+  \node[process=29mm, right=of tok] (emb) {Token + positional\\embedding};
+  \node[process=29mm, right=of emb] (enc) {8 encoder layers\\8 heads, FF 1,024};
+  \node[process=29mm, below=of enc] (last) {Vector at the\\move token};
+  \node[process=29mm, below=of emb] (head) {Linear layer and\\softmax, 128 bins};
+  \node[process=29mm, below=of tok] (ev) {Expected value\\over the bin centres};
+  \node[data] at (ev -| in) (out) {Win probability\\of the move};
+
+  \draw[->] (in) -- (tok);
+  \draw[->] (tok) -- node[dims] {72} (emb);
+  \draw[->] (emb) -- node[dims] {$72{\times}256$} (enc);
+  \draw[->] (enc) -- node[dims, right] {$72{\times}256$} (last);
+  \draw[->] (last) -- node[dims] {256} (head);
+  \draw[->] (head) -- node[dims] {128} (ev);
+  \draw[->] (ev) -- (out);
+\end{tikzpicture}

@@ -1,0 +1,107 @@
+% thi-thesis.sty
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{thi-thesis}[2025/12/12 THI thesis house style]
+
+
+
+% Option: mainlang=ngerman|english
+\RequirePackage{kvoptions}
+\SetupKeyvalOptions{family=THI, prefix=THI@}
+\DeclareStringOption[english]{mainlang}
+\ProcessKeyvalOptions*
+
+% --- Basic encoding / language ---
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[\THI@mainlang]{babel}
+
+% --- Page geometry / spacing ---
+\RequirePackage[a4paper,margin=25mm]{geometry}
+\RequirePackage{setspace}
+\onehalfspacing
+
+% --- Graphics / tables ---
+\RequirePackage{graphicx}
+\RequirePackage{booktabs}
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% --- Flow charts ---
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, calc, fit}
+\tikzset{
+	flowchart/.style={
+		font=\footnotesize, >={Stealth[length=2mm]},
+		every edge/.append style={->}, every label/.append style={font=\footnotesize}},
+	process/.style={draw, rectangle, align=center, text width=#1,
+		minimum height=8mm, inner xsep=4pt, inner ysep=3pt},
+	process/.default=40mm,
+	% A step drawn in detail in another figure: the predefined-process symbol.
+	subprocess/.style={process=#1, inner xsep=3mm,
+		append after command={
+			\pgfextra{\draw ([xshift=1.5mm]\tikzlastnode.north west) -- ([xshift=1.5mm]\tikzlastnode.south west)
+				([xshift=-1.5mm]\tikzlastnode.north east) -- ([xshift=-1.5mm]\tikzlastnode.south east);}}},
+	subprocess/.default=40mm,
+	decision/.style={draw, diamond, aspect=2.4, align=center, inner sep=1pt, minimum width=26mm, fill=gray!10},
+	terminal/.style={draw, rectangle, rounded corners=4mm, align=center,
+		minimum height=8mm, inner xsep=4mm},
+	data/.style={draw, trapezium, trapezium left angle=75, trapezium right angle=105,
+		align=center, minimum height=8mm, trapezium stretches body},
+	group/.style={draw, dashed, gray, rounded corners=2pt, inner sep=3mm},
+	branch/.style={pos=0.2, auto, inner sep=1.5pt},
+}
+
+% --- Math ---
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+
+% --- Better quotes ---
+\RequirePackage{csquotes}
+
+% --- Captions ---
+\RequirePackage{caption}
+\captionsetup{
+	font=small,
+	labelfont=bf,
+	format=plain
+}
+
+% --- Hyperlinks (load late) ---
+\RequirePackage[hidelinks]{hyperref}
+
+% --- Smart references (Fig./Eq./Chapter automatically) ---
+\RequirePackage[nameinlink,noabbrev]{cleveref}
+
+% --- List of abbreviations (only abbreviations used in the text are listed) ---
+\RequirePackage[printonlyused]{acronym}
+
+% --- Bibliography: biblatex+biber (IEEE-like numeric default) ---
+%\RequirePackage[
+%backend=biber,
+%style=ieee,
+%citestyle=numeric,
+%sorting=none
+%]{biblatex}
+% --- Bibliography via BibTeX (robust default) ---
+\RequirePackage[numbers,sort&compress]{natbib}
+\bibliographystyle{IEEEtran}
+
+%\RequirePackage{lmodern}
+\RequirePackage{newtxtext}
+\RequirePackage{newtxmath}
+
+
+% Optional: tighten URL breaks a bit
+\RequirePackage{xurl}
+
+
+
+
+
+
+% --- Let TeX stretch spaces instead of pushing long code names into the margin ---
+\setlength{\emergencystretch}{3em}
+
+% --- House rules: avoid widows/orphans (light touch) ---
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000

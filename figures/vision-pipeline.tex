@@ -1,0 +1,34 @@
+\begin{tikzpicture}[flowchart, node distance=6mm and 8mm]
+  \node[process=44mm] (view) {Move the arm to the viewing pose};
+  \node[data, below=12mm of view] (frame) {Camera frame};
+  \node[decision, below=10mm of frame] (tags) {All four\\tags found?};
+  \node[process=44mm, below=of tags] (pose) {Board pose from the tags};
+  \node[process=44mm, below=of pose] (det) {Detect the icons and\\place them on the board};
+  \node[process=44mm, below=of det] (filter) {Drop the false positives};
+  \node[process=44mm, below=of filter] (cls) {Classify the icons};
+  \node[decision, below=of cls] (count) {All 34 pieces\\found?};
+  \node[data, below=of count] (out) {Detected position, parked pieces\\and free parking spot};
+
+  \node[process=30mm, left=of tags] (realign) {Opponent lines up\\the arm by hand};
+  \node[decision] at (frame -| realign) (key) {Key?};
+  \node[process=24mm] at (view -| realign) (save) {Save the\\viewing pose};
+  \node[process=22mm, left=of key] (restore) {Arm moves to\\the saved pose};
+  \node[process=24mm, right=of count] (show) {Show the piece\\count; opponent\\fixes the board};
+
+  \draw[->] (view) -- (frame);
+  \draw[->] (frame) -- (tags);
+  \draw[->] (tags) -- node[branch] {yes} (pose);
+  \draw[->] (pose) -- (det);
+  \draw[->] (det) -- (filter);
+  \draw[->] (filter) -- (cls);
+  \draw[->] (cls) -- (count);
+  \draw[->] (count) -- node[branch] {yes} (out);
+  \draw[->] (tags) -- node[branch, swap] {no} (realign);
+  \draw[->] (realign) -- (key);
+  \draw[->] (key) -- node[branch] {space} (save);
+  \draw[->] (key) -- node[branch, swap] {\texttt{g}} (restore);
+  \draw[->] (restore) |- (realign);
+  \draw[->] (save) -- (view);
+  \draw[->] (count) -- node[branch] {no} (show);
+  \draw[->] (show.east) -- ++(4mm,0) |- (view.east);
+\end{tikzpicture}

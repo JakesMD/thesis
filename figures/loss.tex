@@ -1,0 +1,21 @@
+\begin{tikzpicture}
+  \begin{axis}[
+      width=\textwidth, height=0.5\textwidth,
+      xlabel={Training step}, ylabel={Loss},
+      xmin=0, xmax=270000, ymin=2.4, ymax=4.1,
+      scaled x ticks=false,
+      xtick={0,50000,100000,150000,200000,250000},
+      xticklabels={0,50k,100k,150k,200k,250k},
+      legend pos=north east, legend cell align=left,
+      grid=major, grid style={gray!20},
+    ]
+    \addplot[blue!35, thin] table[x=step, y=train] {figures/data/loss-v1.dat};
+    \addlegendentry{v1 training}
+    \addplot[blue, thick] table[x=step, y=val] {figures/data/loss-v1.dat};
+    \addlegendentry{v1 validation}
+    \addplot[orange!45, thin] table[x=step, y=train] {figures/data/loss-v2.dat};
+    \addlegendentry{v2 training}
+    \addplot[orange!90!black, thick] table[x=step, y=val] {figures/data/loss-v2.dat};
+    \addlegendentry{v2 validation}
+  \end{axis}
+\end{tikzpicture}

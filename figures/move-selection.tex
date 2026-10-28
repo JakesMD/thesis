@@ -1,0 +1,33 @@
+\begin{tikzpicture}[flowchart, node distance=6mm and 10mm]
+  \node[data, minimum width=56mm] (in) {Start position and the moves so far,\\received over \acs{UCI}};
+  \node[process=50mm, below=of in] (board) {Replay the moves on a board};
+  \node[process=50mm, below=of board] (net) {Score every legal move with\\the network, all in one batch};
+  \node[process=50mm, below=8mm of net] (try) {Try the move on the board};
+  \node[decision, below=of try] (mate) {Checkmate?};
+  \node[decision, below=of mate] (draw) {Drawn, or draw\\claimable?};
+  \node[process=50mm, below=of draw] (keep) {Keep the network's estimate};
+  \node[process=22mm, right=of draw] (half) {Score 0.5};
+  \node[process=22mm] at (mate -| half) (one) {Score 1.0};
+  \node[decision, below=of keep] (next) {Another legal\\move?};
+  \node[process=50mm, below=of next] (best) {Choose the move with\\the highest score};
+  \node[data, minimum width=56mm, below=of best] (out) {Chosen move,\\sent over \acs{UCI}};
+
+  \draw[->] (in) -- (board);
+  \draw[->] (board) -- (net);
+  \draw[->] (net) -- (try);
+  \draw[->] (try) -- (mate);
+  \draw[->] (mate) -- node[branch] {no} (draw);
+  \draw[->] (draw) -- node[branch] {no} (keep);
+  \draw[->] (mate) -- node[branch] {yes} (one);
+  \draw[->] (draw) -- node[branch] {yes} (half);
+  \draw[->] (keep) -- (next);
+  \draw (one.east) -- ++(4mm,0) coordinate (bus);
+  \draw (half.east) -- (half.east -| bus);
+  \draw[->] (bus) |- ($(keep.south)!0.5!(next.north)$);
+  \draw[->] (next.west) -- node[branch, swap] {yes} ++(-8mm,0) |- (try.west);
+  \draw[->] (next) -- node[branch] {no} (best);
+  \draw[->] (best) -- (out);
+
+  \node[group, fit=(try) (mate) (draw) (keep) (one) (half) (bus) (next),
+    label={[anchor=north east, gray, inner sep=4pt]north east:for every legal move}] {};
+\end{tikzpicture}
